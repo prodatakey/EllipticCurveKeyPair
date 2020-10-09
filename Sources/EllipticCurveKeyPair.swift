@@ -698,13 +698,6 @@ public enum EllipticCurveKeyPair {
         }
         
         public func underlying() throws -> SecAccessControl {
-            if flags.contains(.privateKeyUsage) {
-                let flagsWithOnlyPrivateKeyUsage: SecAccessControlCreateFlags = [.privateKeyUsage]
-                guard flags != flagsWithOnlyPrivateKeyUsage else {
-                    throw EllipticCurveKeyPair.Error.inconcistency(message: "Couldn't create access control flag. Keychain chokes if you try to create access control with only [.privateKeyUsage] on devices older than iOS 11 and macOS 10.13.x")
-                }
-            }
-            
             var error: Unmanaged<CFError>?
             let result = SecAccessControlCreateWithFlags(kCFAllocatorDefault, protection, flags, &error)
             guard let accessControl = result else {
